@@ -5,82 +5,271 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Token Allocation Value Calculator</title>
   <style>
+    :root {
+      --bg: #0b0f10;
+      --panel: #12181a;
+      --muted: #9aa4aa;
+      --text: #e7f0f4;
+      --accent: #00f5a0;
+      --accent-2: #00d9f5;
+      --danger: #ff637d;
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
     body {
-      font-family: Arial, sans-serif;
-      background-color: #111;
-      color: #fff;
-      text-align: center;
-      padding: 20px;
+      margin: 0; background: radial-gradient(1200px 800px at 20% -10%, #0f2027 0%, var(--bg) 40%), var(--bg);
+      color: var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      line-height: 1.4; min-height: 100dvh; display: grid; place-items: start center; padding: 32px 16px 80px;
     }
-    h1 {
-      color: #00ff99;
+    header { max-width: 980px; width: 100%; margin-bottom: 16px; }
+    h1 { font-size: clamp(22px, 3.6vw, 36px); margin: 0 0 8px; letter-spacing: 0.2px; }
+    p.subtitle { margin: 0; color: var(--muted); }
+
+    .app { max-width: 980px; width: 100%; display: grid; gap: 16px; grid-template-columns: 1.2fr 1.8fr; }
+    @media (max-width: 860px) { .app { grid-template-columns: 1fr; } }
+
+    .card { background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
     }
-    input {
-      padding: 10px;
-      font-size: 16px;
-      margin-top: 10px;
-      width: 250px;
-      border-radius: 5px;
-      border: none;
+
+    .grid { display: grid; gap: 12px; }
+
+    label { font-size: 13px; color: var(--muted); display: block; margin-bottom: 6px; }
+    input[type="number"], input[type="text"] {
+      width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
+      background: #0e1416; color: var(--text); font-size: 15px; outline: none; transition: border 0.2s, box-shadow 0.2s;
     }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #00ff99;
-      color: black;
-      border: none;
-      border-radius: 5px;
-      margin-top: 10px;
-      cursor: pointer;
+    input[type="number"]:focus, input[type="text"]:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,245,160,0.15); }
+
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 520px) { .row { grid-template-columns: 1fr; } }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #03231b; font-weight: 700; cursor: pointer; user-select: none;
     }
-    .result-box {
-      margin-top: 20px;
-      text-align: left;
-      display: inline-block;
-      background-color: #222;
-      padding: 15px;
-      border-radius: 10px;
-    }
-    .result-box p {
-      font-size: 18px;
-    }
+    .btn.secondary { background: #101719; color: var(--text); }
+    .btn.ghost { background: transparent; border-color: rgba(255,255,255,0.12); color: var(--text); }
+
+    .stack { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { background: #10171a; border: 1px solid rgba(255,255,255,0.1); color: var(--text); padding: 8px 10px; border-radius: 999px; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; }
+    .chip input { accent-color: var(--accent); }
+
+    table { width: 100%; border-collapse: collapse; }
+    thead th { text-align: left; font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: 0.3px; padding: 10px 10px; }
+    tbody td { padding: 12px 10px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 15px; }
+
+    .right { text-align: right; }
+    .muted { color: var(--muted); }
+    .foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 12px; }
+    .small { font-size: 12px; color: var(--muted); }
+
+    .notice { font-size: 12px; color: var(--muted); background: #0e1518; border: 1px dashed rgba(255,255,255,0.12); padding: 10px 12px; border-radius: 12px; }
   </style>
 </head>
 <body>
-  <h1>Token Value Calculator</h1>
-  <p>Total Supply:</p>
-  <input id="supply" type="number" value="10000000000" readonly />
-  <br>
-  <p>Your Token Allocation:</p>
-  <input type="number" id="tokens" placeholder="Enter your token allocation" />
-  <br>
-  <p>Currency Symbol:</p>
-  <input id="currency" type="text" value="$U" maxlength="4" />
-  <br>
-  <button onclick="calculateValue()">Calculate</button>
+  <header>
+    <h1>Token Allocation → Value (by FDV)</h1>
+    <p class="subtitle">Enter your token allocation and instantly see its value across common FDVs. Fully client‑side; no data leaves your browser.</p>
+  </header>
 
-  <div class="result-box" id="results"></div>
+  <section class="app">
+    <!-- Left: Inputs -->
+    <div class="card grid">
+      <div class="row">
+        <div>
+          <label>Total Supply</label>
+          <input id="supply" type="number" min="1" step="1" value="10000000000" readonly />
+        </div>
+        <div>
+          <label>Your Token Allocation</label>
+          <input id="allocation" type="number" min="0" step="1" placeholder="e.g., 100000" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label>Currency Symbol</label>
+          <input id="currency" type="text" value="$U" maxlength="4" />
+        </div>
+        <div>
+          <label>Locale (formatting)</label>
+          <input id="locale" type="text" value="en-IN" />
+        </div>
+      </div>
+
+      <div>
+        <label>FDVs to evaluate</label>
+        <div id="fdvChips" class="stack"></div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label>Add custom FDV (number)</label>
+          <input id="customFdv" type="number" min="1" step="1" placeholder="e.g., 75000000" />
+        </div>
+        <div style="display:flex; align-items:flex-end; gap:10px;">
+          <button id="addFdvBtn" class="btn secondary" type="button">+ Add FDV</button>
+          <button id="resetBtn" class="btn ghost" type="button">Reset</button>
+        </div>
+      </div>
+
+      <div class="notice">Formula: <span class="muted">value = (allocation ÷ totalSupply) × FDV</span></div>
+
+      <div class="stack" style="margin-top: 6px;">
+        <button id="calcBtn" class="btn" type="button">Calculate</button>
+        <button id="copyCsvBtn" class="btn ghost" type="button">Copy CSV</button>
+      </div>
+    </div>
+
+    <!-- Right: Results -->
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>FDV</th>
+            <th class="right">Token Price</th>
+            <th class="right">Your %</th>
+            <th class="right">Your Value</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr><td colspan="4" class="muted">Enter your allocation, then click <b>Calculate</b>.</td></tr>
+        </tbody>
+      </table>
+      <div class="foot">
+        <div id="summary" class="small"></div>
+        <div class="small">All values are instant estimates.</div>
+      </div>
+    </div>
+  </section>
 
   <script>
-    const fdvs = [10000000, 25000000, 50000000, 100000000, 250000000, 500000000, 1000000000];
-    const totalSupply = 10000000000;
+    const defaultFdvs = [10_000_000, 25_000_000, 50_000_000, 100_000_000, 250_000_000, 500_000_000, 1_000_000_000];
+    let fdvList = [...defaultFdvs];
 
-    function calculateValue() {
-      const tokens = document.getElementById("tokens").value;
-      const currency = document.getElementById("currency").value;
-      if (!tokens || tokens <= 0) {
-        alert("Please enter a valid token allocation!");
+    const fdvChipsEl = document.getElementById('fdvChips');
+    const tbody = document.getElementById('tbody');
+
+    function renderFdvChips() {
+      fdvChipsEl.innerHTML = '';
+      fdvList.sort((a,b) => a-b).forEach((fdv, idx) => {
+        const chip = document.createElement('label');
+        chip.className = 'chip';
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = true; cb.dataset.value = String(fdv);
+        const span = document.createElement('span');
+        span.textContent = prettyFDV(fdv);
+        const rm = document.createElement('button');
+        rm.textContent = '×';
+        rm.title = 'remove';
+        rm.style.cssText = 'background:transparent;border:0;color:var(--muted);cursor:pointer;font-weight:700;';
+        rm.onclick = () => { fdvList.splice(idx,1); renderFdvChips(); };
+        chip.appendChild(cb); chip.appendChild(span); chip.appendChild(rm);
+        fdvChipsEl.appendChild(chip);
+      });
+    }
+
+    function prettyFDV(n) {
+      if (n >= 1_000_000_000) return `$${(n/1_000_000_000).toFixed(0)}B`;
+      if (n >= 1_000_000) return `$${(n/1_000_000).toFixed(0)}M`;
+      return `$${n.toLocaleString('en-IN')}`;
+    }
+
+    function fmt(n, locale, currencySymbol) {
+      try {
+        return currencySymbol + Number(n).toLocaleString(locale || 'en-IN');
+      } catch { return currencySymbol + Number(n).toLocaleString('en-IN'); }
+    }
+
+    function pct(num) { return (num*100).toFixed(4).replace(/\.0+$/, '') + '%'; }
+
+    function calculate() {
+      const supply = Number(document.getElementById('supply').value || 0);
+      const alloc = Number(document.getElementById('allocation').value || 0);
+      const currency = document.getElementById('currency').value || '$';
+      const locale = document.getElementById('locale').value || 'en-IN';
+
+      const checked = [...fdvChipsEl.querySelectorAll('input[type=checkbox]')]
+        .filter(c => c.checked)
+        .map(c => Number(c.dataset.value));
+
+      if (!supply || !alloc || checked.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="muted">Please enter supply, allocation and select at least one FDV.</td></tr>';
+        document.getElementById('summary').textContent = '';
         return;
       }
 
-      let html = "<h3>Value of your allocation at different FDVs:</h3>";
-      fdvs.forEach(fdv => {
-        const value = (tokens / totalSupply) * fdv;
-        html += `<p>FDV ${currency}${fdv.toLocaleString('en-US')} → <b>${currency}${value.toLocaleString('en-US')}</b></p>`;
+      const ownership = alloc / supply; // fraction
+      const rows = checked.map(fdv => {
+        const price = fdv / supply; // price per token
+        const value = ownership * fdv; // your value
+        return { fdv, price, ownership, value };
       });
 
-      document.getElementById("results").innerHTML = html;
+      tbody.innerHTML = rows.map(r => `
+        <tr>
+          <td>${prettyFDV(r.fdv)}</td>
+          <td class="right">${fmt(r.price, locale, currency)}</td>
+          <td class="right">${pct(r.ownership)}</td>
+          <td class="right">${fmt(r.value, locale, currency)}</td>
+        </tr>
+      `).join('');
+
+      const min = Math.min(...rows.map(r => r.value));
+      const max = Math.max(...rows.map(r => r.value));
+      document.getElementById('summary').textContent = `Range: ${fmt(min, locale, currency)} → ${fmt(max, locale, currency)}`;
+
+      // Cache last results for CSV export
+      window.__lastRows = rows;
+      window.__lastMeta = { currency, locale };
     }
+
+    function addCustomFdv() {
+      const val = Number(document.getElementById('customFdv').value || 0);
+      if (!val || val < 1) return;
+      if (!fdvList.includes(val)) fdvList.push(val);
+      document.getElementById('customFdv').value = '';
+      renderFdvChips();
+    }
+
+    function resetAll() {
+      document.getElementById('supply').value = 10_000_000_000;
+      document.getElementById('allocation').value = '';
+      document.getElementById('currency').value = '$';
+      document.getElementById('locale').value = 'en-IN';
+      fdvList = [...defaultFdvs];
+      renderFdvChips();
+      tbody.innerHTML = '<tr><td colspan="4" class="muted">Enter your allocation, then click <b>Calculate</b>.</td></tr>';
+      document.getElementById('summary').textContent = '';
+    }
+
+    function copyCSV() {
+      const rows = window.__lastRows || [];
+      if (!rows.length) { navigator.clipboard.writeText(''); return; }
+      const { currency, locale } = window.__lastMeta || { currency: '$', locale: 'en-IN' };
+      const header = ['FDV','Token Price','Your %','Your Value'];
+      const csv = [header.join(',')].concat(rows.map(r => [
+        r.fdv,
+        (r.fdv / Number(document.getElementById('supply').value || 1)).toString(),
+        (r.ownership*100).toString(),
+        (r.value).toString()
+      ].join(','))).join('\n');
+      navigator.clipboard.writeText(csv).then(() => {
+        const btn = document.getElementById('copyCsvBtn');
+        const old = btn.textContent;
+        btn.textContent = 'Copied CSV';
+        setTimeout(() => btn.textContent = old, 1200);
+      });
+    }
+
+    document.getElementById('calcBtn').addEventListener('click', calculate);
+    document.getElementById('addFdvBtn').addEventListener('click', addCustomFdv);
+    document.getElementById('resetBtn').addEventListener('click', resetAll);
+    document.getElementById('copyCsvBtn').addEventListener('click', copyCSV);
+
+    renderFdvChips();
   </script>
 </body>
 </html>
