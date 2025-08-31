@@ -23,10 +23,6 @@
       border-radius: 5px;
       border: none;
     }
-    input[readonly] {
-      background-color: #222;
-      cursor: not-allowed;
-    }
     button {
       padding: 10px 20px;
       font-size: 16px;
@@ -59,7 +55,7 @@
   <input type="number" id="tokens" placeholder="Enter your token allocation" />
   <br>
   <p>Currency Symbol:</p>
-  <input id="currency" type="text" value="$U" readonly />
+  <input id="currency" type="text" value="$U" maxlength="4" />
   <br>
   <button onclick="calculateValue()">Calculate</button>
 
@@ -80,7 +76,7 @@
       let html = "<h3>Value of your allocation at different FDVs:</h3>";
       fdvs.forEach(fdv => {
         const value = (tokens / totalSupply) * fdv;
-        html += `<p>FDV ${currency}${fdv.toLocaleString('en-IN')} → <b>${currency}${value.toLocaleString('en-IN')}</b></p>`;
+        html += `<p>FDV ${currency}${fdv.toLocaleString('en-US')} → <b>${currency}${value.toLocaleString('en-US')}</b></p>`;
       });
 
       document.getElementById("results").innerHTML = html;
