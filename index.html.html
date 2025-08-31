@@ -172,9 +172,9 @@
     }
 
     function prettyFDV(n) {
-      if (n >= 1_000_000_000) return `$${(n/1_000_000_000).toFixed(0)}B`;
-      if (n >= 1_000_000) return `$${(n/1_000_000).toFixed(0)}M`;
-      return `$${n.toLocaleString('en-IN')}`;
+      if (n >= 1_000_000_000) return `$ ${(n/1_000_000_000).toFixed(0)}B`;
+      if (n >= 1_000_000) return `$ ${(n/1_000_000).toFixed(0)}M`;
+      return `$ ${n.toLocaleString('en-IN')}`;
     }
 
     function fmt(n, locale, currencySymbol) {
