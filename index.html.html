@@ -110,7 +110,6 @@
         </div>
         <div style="display:flex; align-items:flex-end; gap:10px;">
           <button id="addFdvBtn" class="btn secondary" type="button">+ Add FDV</button>
-          <button id="resetBtn" class="btn ghost" type="button">Reset</button>
         </div>
       </div>
 
@@ -118,7 +117,6 @@
 
       <div class="stack" style="margin-top: 6px;">
         <button id="calcBtn" class="btn" type="button">Calculate</button>
-        <button id="copyCsvBtn" class="btn ghost" type="button">Copy CSV</button>
       </div>
     </div>
 
@@ -261,9 +259,7 @@
 
     document.getElementById('calcBtn').addEventListener('click', calculate);
     document.getElementById('addFdvBtn').addEventListener('click', addCustomFdv);
-    document.getElementById('resetBtn').addEventListener('click', resetAll);
-    document.getElementById('copyCsvBtn').addEventListener('click', copyCSV);
-
+    
     renderFdvChips();
   </script>
 </body>
