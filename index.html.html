@@ -209,7 +209,7 @@
       tbody.innerHTML = rows.map(r => `
         <tr>
           <td>${prettyFDV(r.fdv)}</td>
-          <td class="right">${fmt(r.price, locale, currency)}</td>
+          <td class="right">$${Number(r.price).toLocaleString(locale)}</td>
           <td class="right">$${Number(r.value).toLocaleString(locale)}</td>
         </tr>
       `).join('');
