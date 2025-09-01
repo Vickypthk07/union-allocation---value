@@ -201,10 +201,10 @@
       }
 
       const rows = checked.map(fdv => {
-  const price = fdv / supply;
-  const value = (alloc / supply) * fdv;
-  return { fdv, price, value };
-});
+        const price = fdv / supply;
+        const value = (alloc / supply) * fdv;
+        return { fdv, price, value };
+      });
 
       tbody.innerHTML = rows.map(r => `
         <tr>
