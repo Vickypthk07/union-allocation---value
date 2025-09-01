@@ -201,11 +201,11 @@
       }
 
       const ownership = alloc / supply; // fraction
-      const rows = checked.map(fdv => {
-        const price = fdv / supply; // price per token
-        const value = ownership * fdv; // your value
-        return { fdv, price, ownership, value };
-      });
+      const rows = fdvs.map(fdv => {
+  const price = fdv / supply;
+  const value = allocation * price;
+  return { fdv, price, value };
+});
 
       tbody.innerHTML = rows.map(r => `
         <tr>
