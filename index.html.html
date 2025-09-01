@@ -6,38 +6,37 @@
   <title>Token Allocation Value Calculator</title>
   <style>.
 
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: radial-gradient(1200px 800px at 20% -10%, #0f2027 0%, var(--bg) 40%), var(--bg);
+    color: var(--text);
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    line-height: 1.4;
+    min-height: 100vh;
+    padding: 32px 16px 80px;
+    display: block; /* ✅ GRID HATA DO */
+}
+
 .credit-footer {
     text-align: center;
     color: #ccc;
     font-size: 14px;
-    position: fixed;  
-    bottom: 10px;  
+    position: fixed;
+    bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
     width: auto;
-    z-index: 9999;   
+    z-index: 9999;
+    background: #12181a; /* ✅ Debug ke liye */
+    padding: 6px 12px;
+    border-radius: 8px;
 }
 
-.credit-footer a {
-    color: #00acee;  /* Twitter blue */
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.credit-footer a:hover {
-    text-decoration: underline;
-}
-
-    :root {
-      --bg: #0b0f10;
-      --panel: #12181a;
-      --muted: #9aa4aa;
-      --text: #e7f0f4;
-      --accent: #00f5a0;
-      --accent-2: #00d9f5;
-      --danger: #ff637d;
-      --radius: 16px;
-    }
     * { box-sizing: border-box; }
     body {
       margin: 0; background: radial-gradient(1200px 800px at 20% -10%, #0f2027 0%, var(--bg) 40%), var(--bg);
