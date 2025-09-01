@@ -178,10 +178,10 @@
     }
 
     function fmt(n, locale, currencySymbol) {
-      try {
-        return currencySymbol + Number(n).toLocaleString(locale || 'en-IN');
-      } catch { return currencySymbol + Number(n).toLocaleString('en-IN'); }
-    }
+  try {
+    return currencySymbol + ' ' + Number(n).toLocaleString(locale || 'en-IN');
+  } catch { return currencySymbol + ' ' + Number(n).toLocaleString('en-IN'); }
+}
 
     function pct(num) { return (num*100).toFixed(4).replace(/\.0+$/, '') + '%'; }
 
