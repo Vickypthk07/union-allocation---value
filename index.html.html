@@ -247,11 +247,10 @@
       const rows = window.__lastRows || [];
       if (!rows.length) { navigator.clipboard.writeText(''); return; }
       const { currency, locale } = window.__lastMeta || { currency: '$', locale: 'en-IN' };
-      const header = ['FDV','Token Price','Your %','Your Value'];
+      const header = ['FDV','Token Price','Your Value'];
       const csv = [header.join(',')].concat(rows.map(r => [
         r.fdv,
         (r.fdv / Number(document.getElementById('supply').value || 1)).toString(),
-        (r.ownership*100).toString(),
         (r.value).toString()
       ].join(','))).join('\n');
       navigator.clipboard.writeText(csv).then(() => {
