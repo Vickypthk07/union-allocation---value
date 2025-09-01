@@ -129,7 +129,6 @@
           <tr>
             <th>FDV</th>
             <th class="right">Token Price</th>
-            <th class="right">Your %</th>
             <th class="right">Your Value</th>
           </tr>
         </thead>
@@ -201,12 +200,11 @@
         return;
       }
 
-      const ownership = alloc / supply; // fraction
       const rows = checked.map(fdv => {
-        const price = fdv / supply; // price per token
-        const value = ownership * fdv; // your value
-        return { fdv, price, ownership, value };
-      });
+  const price = fdv / supply;
+  const value = (alloc / supply) * fdv;
+  return { fdv, price, value };
+});
 
       tbody.innerHTML = rows.map(r => `
         <tr>
